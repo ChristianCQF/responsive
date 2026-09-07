@@ -24,16 +24,55 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textScaleFactor = MediaQuery.textScalerOf(context);
+    final textScaleFactor = MediaQuery.of(context).size.width;
+    String screenState = context.isMobile
+        ? 'MOBILE'
+        : context.isTablet
+        ? 'TABLET'
+        : 'DESKTOP';
     print(textScaleFactor);
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('Bienvenidos', style: TextStyle(fontSize: 14)),
-            Text('Bienvenidos', style: TextStyle(fontSize: 14.sp)),
-          ],
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                screenState,
+                style: TextStyle(fontSize: 35.sp, fontWeight: FontWeight.bold),
+              ),
+              Text('Bienvenidos', style: TextStyle(fontSize: 14.sp)),
+
+              Container(
+                margin: EdgeInsets.symmetric(
+                  vertical: 50.h,
+                  horizontal: context.adaptive(
+                    mobile: 20.adaptiveMobile(15, 25),
+                    tablet: 45.adaptiveTablet(30, 50),
+                    desktop: 150.adaptiveDesktop(80, 800),
+                  ),
+                ),
+                height: 200.h,
+                //width: 350.w,
+                decoration: BoxDecoration(
+                  color: Colors.blueAccent,
+                  borderRadius: BorderRadius.circular(20.size),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.symmetric(
+                  vertical: 50.h,
+                  horizontal: 150.adaptiveDesktop(80, 800),
+                ),
+                height: 200.h,
+                //width: 350.w,
+                decoration: BoxDecoration(
+                  color: Colors.redAccent,
+                  borderRadius: BorderRadius.circular(20.size),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -68,7 +68,7 @@ class ResponsiveConfig {
   // a `.sp` — ver [respectSystemTextScale] — porque mezclar el "font
   // scale" del SO con el escalado geométrico del layout es la causa más
   // común de texto que crece de forma descontrolada en algunos equipos.
-  static const double minSystemTextScale = 0.85;
+  static const double minSystemTextScale = 0.95;
   static const double maxSystemTextScale = 1.3;
 
   /// Si es `true`, `.sp` y los widgets `Text` normales dentro del árbol
@@ -82,7 +82,7 @@ class ResponsiveConfig {
   /// ```dart
   /// ResponsiveConfig.respectSystemTextScale = true;
   /// ```
-  static bool respectSystemTextScale = false;
+  static bool respectSystemTextScale = true;
 
   // ✅ Límites del método `range` / `range2` (interpolación explícita min↔max)
   static const double rangeMinW = 360.0;
@@ -618,20 +618,77 @@ extension ResponsiveNumExt on num {
     max: max,
   );
 
-  /// Escala este valor proporcionalmente desde la referencia de diseño
-  /// natural del [WindowSizeClass] ACTUAL (la misma que usan `.w`, `.h`,
-  /// `.sp` y `.size` internamente — ver [ResponsiveData.referenceWidth]),
-  /// y luego lo acota entre [min] y [max].
-  ///
-  /// A diferencia de la versión original, ya no reduce todo lo que no es
-  /// mobile/tablet a una única referencia "desktop" fija: por eso un
-  /// desktop de 1024px y un monitor 4K obtienen un escalado distinto y
-  /// más preciso.
-  double adaptiveDesktop(double min, double max) {
+  /// ✅ ESCALADO EXCLUSIVO MÓVIL
+  /// Actúa SOLO hasta el breakpoint de tablet (1024px).
+  /// - < 360px: retorna `min`
+  /// - 360px a 600px: escala de `min` a `base`
+  /// - 600px a 1024px: escala de `base` a `max`
+  /// - >= 1024px: retorna `max` (SE DETIENE AQUÍ, no se mezcla con desktop)
+  double adaptiveMobile(double min, double max) {
+    final width = ResponsiveWrapper.instance.width;
     final base = toDouble();
-    final data = ResponsiveWrapper.instance;
-    final scaledValue = base * (data.width / data.referenceWidth);
-    return scaledValue.clamp(min, max);
+
+    const minW = ResponsiveConfig.rangeMinW; // 360.0
+    const mobileBP = ResponsiveConfig.mobileBreakpoint; // 600.0
+    const tabletBP = ResponsiveConfig.tabletBreakpoint; // 1024.0
+
+    if (width <= minW) return min;
+    if (width >= tabletBP) return max; // TOPE ESTRICTO SUPERIOR
+
+    if (width < mobileBP) {
+      final t = (width - minW) / (mobileBP - minW);
+      return min + (base - min) * t;
+    } else {
+      final t = (width - mobileBP) / (tabletBP - mobileBP);
+      return base + (max - base) * t;
+    }
+  }
+
+  /// ✅ ESCALADO EXCLUSIVO TABLET
+  /// Actúa SOLO entre el breakpoint móvil (600px) y el desktop (1024px).
+  /// - < 600px: retorna `min` (INACTIVO)
+  /// - 600px a 851px (ref. tablet): escala de `min` a `base`
+  /// - 851px a 1024px: escala de `base` a `max`
+  /// - >= 1024px: retorna `max` (INACTIVO, no se mezcla con desktop)
+  double adaptiveTablet(double min, double max) {
+    final width = ResponsiveWrapper.instance.width;
+    final base = toDouble();
+
+    const mobileBP = ResponsiveConfig.mobileBreakpoint; // 600.0
+    const tabletRef = ResponsiveConfig.tabletRefW; // 851.0
+    const tabletBP = ResponsiveConfig.tabletBreakpoint; // 1024.0
+
+    if (width <= mobileBP) return min; // TOPE ESTRICTO INFERIOR
+    if (width >= tabletBP) return max; // TOPE ESTRICTO SUPERIOR
+
+    if (width < tabletRef) {
+      final t = (width - mobileBP) / (tabletRef - mobileBP);
+      return min + (base - min) * t;
+    } else {
+      final t = (width - tabletRef) / (tabletBP - tabletRef);
+      return base + (max - base) * t;
+    }
+  }
+
+  /// ✅ ESCALADO EXCLUSIVO DESKTOP
+  /// Actúa principalmente pasando el breakpoint de tablet (1024px) en adelante.
+  /// - < 600px: retorna `min` (INACTIVO)
+  /// - 600px a 1024px: escala suavemente de `min` a `base` (solo para evitar un salto brusco visual al cruzar los 1024px)
+  /// - 1024px a 1440px (ref. desktop): escala principal de `base` a `max`
+  /// - >= 1440px: retorna `max` (TOPE ESTRICTO)
+  double adaptiveDesktop(double min, double max) {
+    final width = ResponsiveWrapper.instance.width;
+    final base = toDouble();
+
+    const tabletBP = ResponsiveConfig.tabletBreakpoint; // 1024.0
+    const maxDesktopW = ResponsiveConfig.extraLargeBreakpoint; // 1920.0
+
+    if (width <= tabletBP) return min; // MÓVIL/TABLET: valor mínimo
+    if (width >= maxDesktopW) return max; // DESKTOP GRANDE: valor máximo
+
+    // DESKTOP: interpola entre min y max
+    final t = (width - tabletBP) / (maxDesktopW - tabletBP);
+    return min + (max - min) * t;
   }
 }
 
