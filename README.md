@@ -34,4 +34,4 @@ Agrega esto a tu `pubspec.yaml`:
 dependencies:
   flutter:
     sdk: flutter
-  responsive_wrapper: ^1.0.0
+  responsive: ^1.0.0
