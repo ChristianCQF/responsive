@@ -23,4 +23,7 @@ Agrega esto a tu `pubspec.yaml`:
 dependencies:
   flutter:
     sdk: flutter
-  responsive: ^1.0.0
+  responsive: ^1.0.2
+
+## Configuración inicial
+Envuelve tu MaterialApp con ResponsiveWrapper:
