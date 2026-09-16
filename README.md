@@ -1342,24 +1342,3 @@ Por ejemplo:
 ```text
 MIT License
 ```
-
----
-
-# Autor
-
-Desarrollado para aplicaciones Flutter multiplataforma con interfaces adaptativas.
-
----
-
-## Roadmap
-
-Posibles mejoras futuras:
-
-* [ ] Soporte para más clases de tamaño de ventana
-* [ ] Helpers para layouts de múltiples columnas
-* [ ] Widgets responsivos adicionales
-* [ ] Soporte avanzado para múltiples ventanas
-* [ ] Tests automatizados para breakpoints
-* [ ] Tests para Foldables
-* [ ] Documentación de API generada automáticamente
-* [ ] Publicación como paquete en `pub.dev`
