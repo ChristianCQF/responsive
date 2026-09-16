@@ -1332,13 +1332,3 @@ cuando sea posible.
 El acceso mediante `instance` existe como mecanismo global, pero el acceso mediante `BuildContext` es más seguro para escenarios como tests, hot reload y aplicaciones con múltiples ventanas.
 
 ---
-
-# Licencia
-
-Agrega aquí la licencia que corresponda a tu proyecto.
-
-Por ejemplo:
-
-```text
-MIT License
-```
