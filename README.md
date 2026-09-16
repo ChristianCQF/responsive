@@ -13,17 +13,6 @@ Un sistema completo y profesional de diseño responsivo para Flutter. Adapta aut
 -  **Alto rendimiento**: Sin rebuilds innecesarios, InheritedWidget optimizado
 -  **Responsive real**: Mismo diseño proporcional en cualquier dispositivo
 
-<table>
-  <tr>
-    <td align="center"><img src="https://via.placeholder.com/300x600/FF6B6B/FFFFFF?text=Sin+Plugin" alt="Sin Responsive Wrapper" width="250"/></td>
-    <td align="center"><img src="https://via.placeholder.com/300x600/4ECDC4/FFFFFF?text=Con+Plugin" alt="Con Responsive Wrapper" width="250"/></td>
-  </tr>
-  <tr>
-    <td align="center"><strong>Sin Responsive Wrapper</strong><br/>Layout roto en diferentes dispositivos</td>
-    <td align="center"><strong>Con Responsive Wrapper</strong><br/>UI perfecta en cualquier pantalla</td>
-  </tr>
-</table>
-
 ## 🚀 Getting started
 
 ### Instalación
