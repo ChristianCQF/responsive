@@ -64,10 +64,10 @@ El sistema utiliza diferentes referencias de diseño según el tamaño de la ven
 Si `Responsive` forma parte directamente de tu proyecto Flutter, agrega el archivo en una estructura similar a:
 
 ```text
-lib/
-└── core/
-    └── responsive/
-        └── responsive.dart
+responsive:
+    git:
+      url: https://github.com/ChristianCQF/responsive.git
+      ref: v1.0.2
 ```
 
 Después importa el archivo:
